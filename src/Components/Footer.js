@@ -17,17 +17,17 @@ class Footer extends Component {
 
     return (
       <footer>
-        <div className="row">
+        <div className="row" style={{ color: 'white' }}>
           <Fade bottom>
             <div className="twelve columns">
               <ul className="social-links">{networks}</ul>
 
               <ul className="copyright">
-                <li>&copy; Copyright 2021 Nordic Giant</li>
+                <li>&copy; Copyright 2022 Josephosan</li>
                 <li>
-                  Design by{" "}
-                  <a title="Styleshout" href="http://www.styleshout.com/">
-                    Styleshout
+                  Design by{" Joseph.o "}
+                  <a title="page" href="https://josephosan.info/">
+                    -this page
                   </a>
                 </li>
               </ul>

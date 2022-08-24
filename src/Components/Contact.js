@@ -1,7 +1,14 @@
 import React, { Component } from "react";
 import { Fade, Slide } from "react-reveal";
+import http from '../services/httpServices';
+import config from '../config/config';
+import { toast } from "react-toastify";
 
 class Contact extends Component {
+  state = {
+    csd: [],
+    httpResMessage: ''
+  }
   render() {
     if (!this.props.data) return null;
 
@@ -32,7 +39,10 @@ class Contact extends Component {
         <div className="row">
           <Slide left duration={1000}>
             <div className="eight columns">
-              <form action="" method="post" id="contactForm" name="contactForm">
+
+
+
+              <form name="contactForm" onSubmit={this.onSubmit}>
                 <fieldset>
                   <div>
                     <label htmlFor="contactName">
@@ -79,6 +89,7 @@ class Contact extends Component {
                       Message <span className="required">*</span>
                     </label>
                     <textarea
+                      style={{ resize: 'none' }}
                       cols="50"
                       rows="15"
                       id="contactMessage"
@@ -86,14 +97,18 @@ class Contact extends Component {
                     ></textarea>
                   </div>
 
+                  {/* the service data */}
+                  
                   <div>
                     <button className="submit">Submit</button>
-                    <span id="image-loader">
+                    {/* <span id="image-loader">
                       <img alt="" src="images/loader.gif" />
-                    </span>
+                    </span> */}
                   </div>
                 </fieldset>
               </form>
+
+
 
               <div id="message-warning"> Error boy</div>
               <div id="message-success">
@@ -118,38 +133,22 @@ class Contact extends Component {
               </div>
 
               <div className="widget widget_tweets">
-                <h4 className="widget-title">Latest Tweets</h4>
-                <ul id="twitter">
-                  <li>
-                    <span>
-                      This is Photoshop's version of Lorem Ipsum. Proin gravida
-                      nibh vel velit auctor aliquet. Aenean sollicitudin, lorem
-                      quis bibendum auctor, nisi elit consequat ipsum
-                      <a href="./">http://t.co/CGIrdxIlI3</a>
-                    </span>
-                    <b>
-                      <a href="./">2 Days Ago</a>
-                    </b>
-                  </li>
-                  <li>
-                    <span>
-                      Sed ut perspiciatis unde omnis iste natus error sit
-                      voluptatem accusantium doloremque laudantium, totam rem
-                      aperiam, eaque ipsa quae ab illo inventore veritatis et
-                      quasi
-                      <a href="./">http://t.co/CGIrdxIlI3</a>
-                    </span>
-                    <b>
-                      <a href="./">3 Days Ago</a>
-                    </b>
-                  </li>
-                </ul>
+                
               </div>
             </aside>
           </Slide>
         </div>
       </section>
     );
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+    console.log(e);
+  }
+
+  componentDidMount() {
+    
   }
 }
 
