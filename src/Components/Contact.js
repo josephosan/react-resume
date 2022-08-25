@@ -7,9 +7,18 @@ import { toast } from "react-toastify";
 class Contact extends Component {
   state = {
     csd: [],
-    httpResMessage: ''
-  }
+    httpResMessage: '',
+    form: {
+      contactName: '',
+      contactEmail: '',
+      contactSubject: '',
+      contactMessage: ''
+    },
+    loading: false
+  };
+
   render() {
+
     if (!this.props.data) return null;
 
     const name = this.props.data.name;
@@ -49,6 +58,7 @@ class Contact extends Component {
                       Name <span className="required">*</span>
                     </label>
                     <input
+                      value={this.state.form.name}
                       type="text"
                       defaultValue=""
                       size="35"
@@ -63,6 +73,7 @@ class Contact extends Component {
                       Email <span className="required">*</span>
                     </label>
                     <input
+                      value={this.state.form.email}
                       type="text"
                       defaultValue=""
                       size="35"
@@ -75,6 +86,7 @@ class Contact extends Component {
                   <div>
                     <label htmlFor="contactSubject">Subject</label>
                     <input
+                      value={this.state.form.subject}
                       type="text"
                       defaultValue=""
                       size="35"
@@ -89,11 +101,13 @@ class Contact extends Component {
                       Message <span className="required">*</span>
                     </label>
                     <textarea
+                      value={this.state.form.message}
                       style={{ resize: 'none' }}
                       cols="50"
                       rows="15"
                       id="contactMessage"
                       name="contactMessage"
+                      onChange={this.handleChange}
                     ></textarea>
                   </div>
 
@@ -101,9 +115,7 @@ class Contact extends Component {
                   
                   <div>
                     <button className="submit">Submit</button>
-                    {/* <span id="image-loader">
-                      <img alt="" src="images/loader.gif" />
-                    </span> */}
+                    {this.handleLoadingState()}
                   </div>
                 </fieldset>
               </form>
@@ -142,13 +154,66 @@ class Contact extends Component {
     );
   }
 
-  onSubmit(e) {
+  handleLoadingState = () => {
+    if(this.state.loading) return (
+      <img style={{ 'margin-left': '1rem'}} src="images/loader.gif"/>
+    );
+  }
+
+  onSubmit = async e => {
     e.preventDefault();
-    console.log(e);
+    
+    const formData = {...this.state.form};
+    this.setState({ loading: true });
+    let formObj = {};
+
+    // making obj
+    if(formData.contactSubject === '') {
+      formObj = {
+        name: formData.contactName,
+        email: formData.contactEmail,
+        message: formData.contactMessage
+      };
+    } else {
+      formObj = {
+        name: formData.contactName,
+        email: formData.contactEmail,
+        subject: formData.contactSubject,
+        message: formData.contactMessage
+      };
+    }
+
+    // calling the server
+    try {
+      const res = await http.post(config.serverURL()+'contact', formObj);
+
+      if(!res.data.success) {
+        toast.error(res.data.message);
+        return;
+      }
+
+      toast.success("Form sent successfully.");
+      this.setState({ loading: false });
+    } catch(err) {
+      this.setState({ loading: false });
+      if(err.response.status === 400) {
+        toast.error(err.response.data.errMessage);
+        return;
+      }
+      toast.error('Could not call the server!');
+      return;
+    }
+    
   }
 
   componentDidMount() {
     
+  }
+
+  handleChange = ({ currentTarget: input }) => {
+    const formData = {...this.state.form};
+    formData[input.name] = input.value;
+    this.setState({ form: formData });
   }
 }
 
